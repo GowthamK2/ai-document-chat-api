@@ -3,6 +3,8 @@ from fastapi import UploadFile, File
 
 from pydantic import BaseModel
 
+from app.rag_service import ask_question
+
 import os
 
 from app.chunker import chunk_text
@@ -26,6 +28,8 @@ app = FastAPI(
 class SearchRequest(BaseModel):
     query: str
 
+class AskRequest(BaseModel):
+    question: str
 
 @app.get("/")
 async def home():
@@ -104,3 +108,11 @@ async def search_documents(
         "query": request.query,
         "results": results["documents"][0]
     }
+
+@app.post("/ask")
+async def ask(
+    request: AskRequest
+):
+    result = ask_question(request.question)
+
+    return result
