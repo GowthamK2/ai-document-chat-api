@@ -9,9 +9,9 @@ A Retrieval-Augmented Generation (RAG) application built with FastAPI.
 - [x] PDF Upload API
 - [x] PDF Text Extraction
 - [x] Text Chunking
-- [ ] Embeddings
-- [ ] ChromaDB
-- [ ] Semantic Search
+- [x] Embeddings
+- [x] ChromaDB
+- [x] Semantic Search
 - [ ] LLM Integration
 - [ ] Streamlit Frontend
 
