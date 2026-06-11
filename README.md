@@ -12,7 +12,7 @@ A Retrieval-Augmented Generation (RAG) application built with FastAPI.
 - [x] Embeddings
 - [x] ChromaDB
 - [x] Semantic Search
-- [ ] LLM Integration
+- [x] LLM Integration
 - [ ] Streamlit Frontend
 
 ## Tech Stack
