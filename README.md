@@ -23,3 +23,4 @@ A Retrieval-Augmented Generation (RAG) application built with FastAPI.
 - ChromaDB
 - LangChain
 - Ollama
+- 
