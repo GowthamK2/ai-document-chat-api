@@ -14,16 +14,20 @@ from app.memory_service import (
 )
 
 
-def ask_question(question: str):
+def ask_question(
+    question: str
+):
 
     memory = get_memory()
 
     history = ""
 
     for item in memory:
+
         history += (
             item["question"] + " "
         )
+
     enhanced_query = (
         history + question
     )
@@ -41,11 +45,10 @@ def ask_question(question: str):
         results["documents"][0]
     )
 
-    memory = get_memory()
-
     memory_text = ""
 
     for item in memory:
+
         memory_text += (
             f"Question: {item['question']}\n"
             f"Answer: {item['answer']}\n\n"
@@ -64,6 +67,7 @@ def ask_question(question: str):
 
     return {
         "question": question,
+        "enhanced_query": enhanced_query,
         "answer": answer,
         "context": context
     }

@@ -8,7 +8,11 @@ collection = client.get_or_create_collection(
     name="document"
 )
 
-def store_chunks(chunks, embeddings):
+
+def store_chunks(
+    chunks,
+    embeddings
+):
 
     ids = [
         f"chunk_{i}"
@@ -21,24 +25,17 @@ def store_chunks(chunks, embeddings):
         embeddings=embeddings
     )
 
+
 def search_chunks(
     query_embedding,
     n_results=3
 ):
+
     results = collection.query(
-        query_embeddings=[query_embedding],
+        query_embeddings=[
+            query_embedding
+        ],
         n_results=n_results
     )
 
     return results
-
-def count_chunks():
-    return collection.count()
-
-def get_documents(query_embedding, n_results=3):
-    results = collection.query(
-        query_embeddings=[query_embedding],
-        n_results = n_results
-    )
-
-    return results["documents"][0]

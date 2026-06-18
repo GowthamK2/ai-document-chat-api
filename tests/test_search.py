@@ -1,4 +1,6 @@
-from app.embeddings import get_embedding
+from app.embeddings import (
+    get_embedding
+)
 
 from app.chroma_services import (
     search_chunks
@@ -11,7 +13,8 @@ query_embedding = get_embedding(
 )
 
 results = search_chunks(
-    query_embedding
+    query_embedding,
+    n_results=2
 )
 
 print(results)

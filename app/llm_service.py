@@ -8,12 +8,14 @@ def generate_answer(
 ):
 
     prompt = f"""
-You are a helpful assistant.
+    You are a document question-answering assistant.
 
-Use the conversation history and document context.
-
-If the answer is not found in the context,
-say "I don't know based on the provided document."
+    Rules:
+    1. Answer ONLY from the provided context.
+    2. Keep answers concise and relevant.
+    3. Do NOT add information that is not directly related to the question.
+    4. If the answer is not present in the context, say:
+    "I don't know based on the provided document."
 
 Conversation History:
 {memory}
@@ -23,6 +25,8 @@ Context:
 
 Question:
 {question}
+
+Answer:
 """
 
     response = chat(

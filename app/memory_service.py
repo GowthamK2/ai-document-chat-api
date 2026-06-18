@@ -1,6 +1,11 @@
 chat_history = []
 
-def add_to_memory(question,answer):
+
+def add_to_memory(
+    question,
+    answer
+):
+
     chat_history.append(
         {
             "question": question,
@@ -8,5 +13,7 @@ def add_to_memory(question,answer):
         }
     )
 
+
 def get_memory():
+
     return chat_history[-5:]

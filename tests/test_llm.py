@@ -1,9 +1,12 @@
-from app.llm_service import generate_answer
+from app.llm_service import (
+    generate_answer
+)
 
-context = """ FastAPI is a modern Python web framework.
-It is used for building APIs."""
+question = "What is FastAPI?"
 
-question = "what is FastAPI?"
+context = """
+FastAPI is a backend framework.
+"""
 
 answer = generate_answer(
     question,
