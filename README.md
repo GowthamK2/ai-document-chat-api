@@ -1,4 +1,4 @@
-# AI Document Chat API
+# AI Document Chat API (DocMind AI Chat App)
 
 A Retrieval-Augmented Generation (RAG) application built with FastAPI.
 
@@ -13,7 +13,7 @@ A Retrieval-Augmented Generation (RAG) application built with FastAPI.
 - [x] ChromaDB
 - [x] Semantic Search
 - [x] LLM Integration
-- [ ] Streamlit Frontend
+- [x] Streamlit Frontend
 
 ## Tech Stack
 
