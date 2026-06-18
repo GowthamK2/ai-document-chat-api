@@ -1,3 +1,4 @@
+import uuid
 import chromadb
 
 client = chromadb.PersistentClient(
@@ -15,14 +16,22 @@ def store_chunks(
 ):
 
     ids = [
-        f"chunk_{i}"
+        str(uuid.uuid4())
+        for _ in chunks
+    ]
+
+    metadatas = [
+        {
+            "chunk_number": i
+        }
         for i in range(len(chunks))
     ]
 
     collection.add(
         ids=ids,
         documents=chunks,
-        embeddings=embeddings
+        embeddings=embeddings,
+        metadatas=metadatas
     )
 
 
@@ -35,7 +44,12 @@ def search_chunks(
         query_embeddings=[
             query_embedding
         ],
-        n_results=n_results
+        n_results=n_results,
+        include=[
+            "documents",
+            "distances",
+            "metadatas"
+        ]
     )
 
     return results

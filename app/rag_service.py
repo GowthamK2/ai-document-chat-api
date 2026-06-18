@@ -13,27 +13,37 @@ from app.memory_service import (
     get_memory
 )
 
+from app.evaluation_service import (
+    evaluate_response,
+    confidence_score
+)
+
+from app.hallucination_service import (
+    detect_hallucination
+)
+
+from app.reranker import (
+    rerank_chunks
+)
+
+
 
 def ask_question(
     question: str
 ):
 
+    # -------------------------
+    # Memory
+    # -------------------------
+
     memory = get_memory()
 
-    history = ""
-
-    for item in memory:
-
-        history += (
-            item["question"] + " "
-        )
-
-    enhanced_query = (
-        history + question
-    )
+    # -------------------------
+    # Retrieval
+    # -------------------------
 
     query_embedding = get_embedding(
-        enhanced_query
+        question
     )
 
     results = search_chunks(
@@ -41,33 +51,114 @@ def ask_question(
         n_results=3
     )
 
-    context = "\n".join(
+    # -------------------------
+    # No Results Guard
+    # -------------------------
+
+    if (
+        not results
+        or "documents" not in results
+        or not results["documents"]
+    ):
+
+        return {
+            "question": question,
+            "answer":
+                "I don't know based on the provided document.",
+            "context": "",
+            "sources": [],
+            "evaluation": {},
+            "hallucination": {},
+            "confidence": 0
+        }
+
+    retrieved_chunks = (
         results["documents"][0]
     )
 
-    memory_text = ""
+    # -------------------------
+    # Reranking
+    # -------------------------
 
-    for item in memory:
+    best_chunks = rerank_chunks(
+        question,
+        retrieved_chunks
+    )
 
-        memory_text += (
-            f"Question: {item['question']}\n"
-            f"Answer: {item['answer']}\n\n"
+    # -------------------------
+    # No Relevant Context Guard
+    # -------------------------
+
+    if not best_chunks:
+
+        answer = (
+            "I don't know based on the provided document."
         )
 
-    answer = generate_answer(
+        context = ""
+
+    else:
+
+        context = "\n\n".join(
+            best_chunks
+        )
+
+        answer = generate_answer(
+            question,
+            context,
+            memory
+        )
+
+    # -------------------------
+    # Evaluation
+    # -------------------------
+
+    evaluation = evaluate_response(
         question,
         context,
-        memory_text
+        answer
     )
+
+    hallucination = detect_hallucination(
+        answer,
+        context
+    )
+
+    unsupported_word_count = hallucination.get(
+        "unsupported_word_count",
+        0
+    )
+
+    confidence = confidence_score(
+        len(context),
+        unsupported_word_count
+    )
+
+    # -------------------------
+    # Save Memory
+    # -------------------------
 
     add_to_memory(
         question,
         answer
     )
 
+    # -------------------------
+    # Response
+    # -------------------------
+
     return {
         "question": question,
-        "enhanced_query": enhanced_query,
         "answer": answer,
-        "context": context
+        "context": context,
+        "sources": best_chunks,
+        "retrieved_chunks": len(
+            retrieved_chunks
+        ),
+        "reranked_chunks": len(
+            best_chunks
+        ),
+        "evaluation": evaluation,
+        "hallucination": hallucination,
+        "confidence": confidence
     }

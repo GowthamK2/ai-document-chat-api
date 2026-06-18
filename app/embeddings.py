@@ -8,8 +8,10 @@ model = SentenceTransformer(
 def get_embedding(
     text: str
 ):
+
     embedding = model.encode(
-        text
+        text,
+        normalize_embeddings=True
     )
 
     return embedding.tolist()

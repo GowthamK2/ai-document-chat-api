@@ -32,11 +32,19 @@ async def home():
         "message": "AI Document Chat API running"
     }
 
-
 @app.post("/upload-pdf")
 async def upload_pdf(
     file: UploadFile = File(...)
 ):
+
+    if not file.filename.endswith(
+        ".pdf"
+    ):
+        return {
+            "error":
+            "Only PDF files are allowed."
+        }
+
     upload_dir = "data/uploads"
 
     os.makedirs(
@@ -49,38 +57,60 @@ async def upload_pdf(
         file.filename
     )
 
-    with open(
-        file_path,
-        "wb"
-    ) as buffer:
+    try:
 
-        content = await file.read()
-        buffer.write(content)
+        with open(
+            file_path,
+            "wb"
+        ) as buffer:
 
-    text = extract_text_from_pdf(
-        file_path
-    )
+            content = await file.read()
+            buffer.write(content)
 
-    chunks = chunk_text(text)
+        text = extract_text_from_pdf(
+            file_path
+        )
 
-    embeddings = [
-        get_embedding(chunk)
-        for chunk in chunks
-    ]
+        chunks = chunk_text(
+            text
+        )
 
-    store_chunks(
-        chunks,
-        embeddings
-    )
+        embeddings = [
+            get_embedding(chunk)
+            for chunk in chunks
+        ]
 
-    return {
-        "filename": file.filename,
-        "characters": len(text),
-        "total_chunks": len(chunks),
-        "first_chunk": chunks[0]
-    }
+        store_chunks(
+            chunks,
+            embeddings
+        )
 
+        first_chunk = (
+            chunks[0]
+            if chunks
+            else ""
+        )
 
+        return {
+            "filename":
+                file.filename,
+
+            "characters":
+                len(text),
+
+            "total_chunks":
+                len(chunks),
+
+            "first_chunk":
+                first_chunk
+        }
+
+    except Exception as e:
+
+        return {
+            "error": str(e)
+        }
+    
 @app.post("/search")
 async def search_documents(
     request: SearchRequest
