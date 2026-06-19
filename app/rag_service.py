@@ -9,8 +9,7 @@ from app.llm_service import (
 )
 
 from app.memory_service import (
-    add_to_memory,
-    get_memory
+    add_to_memory
 )
 
 from app.evaluation_service import (
@@ -27,16 +26,9 @@ from app.reranker import (
 )
 
 
-
 def ask_question(
     question: str
 ):
-
-    # -------------------------
-    # Memory
-    # -------------------------
-
-    memory = get_memory()
 
     # -------------------------
     # Retrieval
@@ -48,7 +40,7 @@ def ask_question(
 
     results = search_chunks(
         query_embedding,
-        n_results=3
+        n_results=5
     )
 
     # -------------------------
@@ -105,8 +97,7 @@ def ask_question(
 
         answer = generate_answer(
             question,
-            context,
-            memory
+            context
         )
 
     # -------------------------

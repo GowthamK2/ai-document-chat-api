@@ -40,16 +40,22 @@ def search_chunks(
     n_results=3
 ):
 
-    results = collection.query(
-        query_embeddings=[
-            query_embedding
-        ],
-        n_results=n_results,
-        include=[
-            "documents",
-            "distances",
-            "metadatas"
-        ]
-    )
+    try:
 
-    return results
+        return collection.query(
+            query_embeddings=[
+                query_embedding
+            ],
+            n_results=n_results,
+            include=[
+                "documents",
+                "distances",
+                "metadatas"
+            ]
+        )
+
+    except Exception as e:
+
+        raise Exception(
+            f"Chroma Search Error: {e}"
+        )

@@ -8,7 +8,8 @@ STOP_WORDS = {
     "and", "in", "on",
     "with", "by", "that",
     "this", "it", "has",
-    "have", "had"
+    "have", "had",
+    "be", "been", "being"
 }
 
 
@@ -49,12 +50,16 @@ def detect_hallucination(
     )
 
     return {
-        "unsupported_word_count":
-            unsupported_count,
+    "unsupported_word_count":
+        unsupported_count,
 
-        "unsupported_words":
-            list(unsupported_words),
+    "unsupported_words":
+        sorted(
+            list(
+                unsupported_words
+            )
+        ),
 
-        "possible_hallucination":
-            unsupported_count > 10
-    }
+    "possible_hallucination":
+        unsupported_count > 10
+}

@@ -1,12 +1,13 @@
 import re
 
-
 STOP_WORDS = {
     "the", "a", "an",
     "is", "are", "was", "were",
     "which", "what", "who",
     "of", "to", "for",
-    "and", "in", "on"
+    "and", "in", "on",
+    "with", "by", "from",
+    "that", "this", "it"
 }
 
 
@@ -14,6 +15,9 @@ def rerank_chunks(
     query: str,
     chunks: list
 ):
+
+    if not chunks:
+        return []
 
     query_words = {
         word
@@ -37,13 +41,11 @@ def rerank_chunks(
             if word not in STOP_WORDS
         }
 
-        overlap_score = len(
+        score = len(
             query_words.intersection(
                 chunk_words
             )
         )
-
-        score = overlap_score
 
         scored_chunks.append(
             (score, chunk)
@@ -54,10 +56,8 @@ def rerank_chunks(
         reverse=True
     )
 
-    best_chunks = [
+    return [
         chunk
         for score, chunk in scored_chunks
         if score > 0
-    ]
-
-    return best_chunks[:2]
+    ][:2]

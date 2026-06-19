@@ -41,4 +41,7 @@ def confidence_score(
         70
     )
 
-    return max(score, 0)
+    return max(
+        min(score, 100),
+        0
+    )

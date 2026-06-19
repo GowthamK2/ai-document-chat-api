@@ -13,6 +13,10 @@ def add_to_memory(
         }
     )
 
+    if len(chat_history) > 50:
+
+        chat_history.pop(0)
+
 
 def get_memory():
 

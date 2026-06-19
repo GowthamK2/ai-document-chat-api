@@ -4,6 +4,14 @@ def chunk_text(
     overlap: int = 50
 ):
 
+    if not text.strip():
+        return []
+
+    if overlap >= chunk_size:
+        raise ValueError(
+            "overlap must be smaller than chunk_size"
+        )
+
     chunks = []
 
     start = 0

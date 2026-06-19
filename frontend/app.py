@@ -68,7 +68,8 @@ with st.sidebar:
 
                     response = requests.post(
                         f"{BACKEND_URL}/upload-pdf",
-                        files=files
+                        files=files,
+                        timeout=120 
                     )
 
                 if response.status_code == 200:
@@ -179,8 +180,14 @@ if question:
                 f"{BACKEND_URL}/ask",
                 json={
                     "question": question
-                }
+                },
+                timeout=120
             )
+            if response.status_code != 200:
+                st.error(
+                    "Backend request failed."
+                )
+                st.stop()
 
             result = response.json()
 
