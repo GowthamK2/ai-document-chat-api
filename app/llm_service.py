@@ -1,25 +1,40 @@
-from ollama import chat
+import os
+
+from dotenv import load_dotenv
+import google.generativeai as genai
+
+
+load_dotenv()
+
+genai.configure(
+    api_key=os.getenv(
+        "GEMINI_API_KEY"
+    )
+)
+
+model = genai.GenerativeModel(
+    "gemini-2.5-flash"
+)
 
 
 def generate_answer(
     question: str,
-    context: str
+    context: str,
+    memory=None
 ):
 
     prompt = f"""
 You are a strict document question-answering assistant.
 
-Rules:
+RULES:
 
 1. Use ONLY the provided context.
 2. Never use outside knowledge.
 3. Never infer.
 4. Never guess.
-5. Return ONLY the answer.
-6. Do not explain reasoning.
-7. Maximum 3 bullet points.
-8. Maximum 60 words.
-9. If information is not explicitly present, respond exactly:
+5. Maximum 3 bullet points.
+6. Maximum 60 words.
+7. If the answer is not explicitly present in the context, reply exactly:
 
 I don't know based on the provided document.
 
@@ -32,28 +47,12 @@ Question:
 
     try:
 
-        response = chat(
-            model="phi3",
-            messages=[
-                {
-                    "role": "system",
-                    "content":
-                        "Answer only from the provided context."
-                },
-                {
-                    "role": "user",
-                    "content": prompt
-                }
-            ],
-            options={
-                "temperature": 0,
-                "top_p": 0.5,
-                "num_predict": 150
-            }
+        response = model.generate_content(
+            prompt
         )
 
-        return response.message.content
+        return response.text.strip()
 
     except Exception as e:
 
-        return f"LLM Error: {e}"
+        return f"Gemini Error: {str(e)}"
