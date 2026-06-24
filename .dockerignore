@@ -1,7 +1,8 @@
-venv
-**pycache**
+venv/
+__pycache__/
 .git
-data/chroma_db
-data/uploads
+.env
+data/chroma_db/
+data/uploads/
 *.pyc
-.streamlit
+
