@@ -382,4 +382,4 @@ https://github.com/GowthamK2
 * Hallucination Detection
 * Confidence Scoring
 * Dockerized Architecture
-* Production-Oriented Design
+* Production-Oriented Design.
